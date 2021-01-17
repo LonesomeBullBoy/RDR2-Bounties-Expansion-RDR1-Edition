@@ -1,37 +1,26 @@
 #pragma once
 
-enum RobberyProgress
-{
-	NONE,
-	TARGET_RESISTING,
-	WAITING_FOR_INTIMIDATION,
-	TARGET_GAVE_UP,
-	FINISHED
-};
-
 class AndrewClarkExecutor : public BaseMissionExecutor
 {
 private:
-	Vehicle wagon;
-	Object stash;
-	vector<Object> campProps;
-	Prompt* threatPrompt;
-	bool isTargetAlerted;
-	bool isTargetScared;
-	bool spawnedBountyHunters;
-	int robberyAttempts;
-	RobberyProgress robberyProgress;
+	Vector3 campfirePos;
+	Object campfire;
+	Ped horse;
+	GuardsGroup* enemiesGroup;
+	vector<Ped> horses;
 
 public:
 	AndrewClarkExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
 	void update();
 
-private:
-	Ped spawnTarget();
+protected:
 	void prepareSet();
+	Ped spawnTarget();
 	void onTargetLocated();
 	void cleanup();
 
-	void playTargetRobbery();
-	void goToStash();
+private:
+	void releaseUnnecessaryEntities();
+	void addHorse(Ped horse);
+	void addHorse(const char* model, Vector3 pos);
 };

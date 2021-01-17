@@ -1,7 +1,5 @@
 #include "Main.h";
 
-bool weapon;
-
 void giveWeaponToPed(Ped ped, WeaponHash hash, int ammo, bool equipNow)
 {
 	if (!WEAPON::HAS_PED_GOT_WEAPON(ped, (Hash)hash, 0, 0))
@@ -17,8 +15,9 @@ void giveWeaponToPed(Ped ped, WeaponHash hash, int ammo, bool equipNow)
 
 void pedEquipBestWeapon(Ped ped)
 {
+	auto bow = new Hash;
 	int iWeapon = rand() % 2 + 1;
-	if (PED::IS_PED_MODEL(ped, 2873015698) && weapon != true)
+	if (PED::IS_PED_MODEL(ped, 2873015698) && !WEAPON::GET_CURRENT_PED_WEAPON(ped, bow, true, true, true))
 	{
 		if (iWeapon == 1)
 		{
@@ -26,12 +25,11 @@ void pedEquipBestWeapon(Ped ped)
 		}
 		else if (iWeapon == 2)
 		{
+			WEAPON::REMOVE_WEAPON_FROM_PED(ped, WEAPON::GET_BEST_PED_WEAPON(ped, 0, 0), false, 0);
 			giveWeaponToPed(ped, WeaponBow, 0x38E6F55F, true);
-			WEAPON::REMOVE_WEAPON_FROM_PED(ped, WEAPON::GET_BEST_PED_WEAPON(ped, 0, 0), false, 0);
 		}
-		weapon = true;
 	}
-	else if ((PED::IS_PED_MODEL(ped, 1057570823) || PED::IS_PED_MODEL(ped, 3939581308) || PED::IS_PED_MODEL(ped, 3666010779) || PED::IS_PED_MODEL(ped, 3325147641) || PED::IS_PED_MODEL(ped, 3204687205) || PED::IS_PED_MODEL(ped, 347599949) || PED::IS_PED_MODEL(ped, 50483426)) && weapon != true)
+	else if ((PED::IS_PED_MODEL(ped, 1057570823) || PED::IS_PED_MODEL(ped, 3939581308) || PED::IS_PED_MODEL(ped, 3666010779) || PED::IS_PED_MODEL(ped, 3204687205) || PED::IS_PED_MODEL(ped, 347599949) || PED::IS_PED_MODEL(ped, 50483426)) && !WEAPON::GET_CURRENT_PED_WEAPON(ped, bow, true, true, true))
 	{
 		if (iWeapon == 1)
 		{
@@ -39,12 +37,11 @@ void pedEquipBestWeapon(Ped ped)
 		}
 		else if (iWeapon == 2)
 		{
-			giveWeaponToPed(ped, RevolverSchofield, 0x64356159, true);
 			WEAPON::REMOVE_WEAPON_FROM_PED(ped, WEAPON::GET_BEST_PED_WEAPON(ped, 0, 0), false, 0);
+			giveWeaponToPed(ped, RevolverSchofield, 0x64356159, true);
 		}
-		weapon = true;
 	}
-	else if (PED::IS_PED_MODEL(ped, 265884691) && weapon != true)
+	else if (PED::IS_PED_MODEL(ped, 265884691) && !WEAPON::GET_CURRENT_PED_WEAPON(ped, bow, true, true, true))
 	{
 		if (iWeapon == 1)
 		{
@@ -54,7 +51,6 @@ void pedEquipBestWeapon(Ped ped)
 		{
 			giveWeaponToPed(ped, RevolverSchofield, 0x64356159, true);
 		}
-		weapon = true;
 	}
 	else
 	{

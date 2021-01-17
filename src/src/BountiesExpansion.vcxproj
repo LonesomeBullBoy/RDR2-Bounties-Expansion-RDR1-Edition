@@ -39,7 +39,6 @@
     <ClCompile Include="ConversationLine.cpp" />
     <ClCompile Include="Delay.cpp" />
     <ClCompile Include="EliasTraditionExecutor.cpp" />
-    <ClCompile Include="ExecuteVictimInteraction.h" />
     <ClCompile Include="GameStopwatch.cpp" />
     <ClCompile Include="GUIDrawer.cpp" />
     <ClCompile Include="HelpMessages.cpp" />
@@ -67,8 +66,6 @@
     <ClCompile Include="AttachedRopesHandling.cpp" />
     <ClCompile Include="QuentinChigurhExecutor.cpp" />
     <ClCompile Include="RichardMooreExecutor.cpp" />
-    <ClCompile Include="RobberyAimAtVictim.cpp" />
-    <ClCompile Include="RobberyWarningShot.cpp" />
     <ClCompile Include="RobertCorbucciExecutor.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="Stopwatch.cpp" />
@@ -146,7 +143,6 @@
     <ClInclude Include="AttachedRopesHanding.h" />
     <ClInclude Include="QuentinChigurhExecutor.h" />
     <ClInclude Include="RichardMooreExecutor.h" />
-    <ClInclude Include="RobberyInteraction.h" />
     <ClInclude Include="RobertCorbucciExecutor.h" />
     <ClInclude Include="script.h" />
     <ClInclude Include="Stopwatch.h" />

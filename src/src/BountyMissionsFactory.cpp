@@ -99,9 +99,9 @@ EliasTraditionExecutor* BountyMissionsFactory::eliasTraditionExecutor()
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 75;
 	data.rewardStr = "$75";
-	data.startPosition.x = -2032.61;
-	data.startPosition.y = -1909.63;
-	data.startPosition.z = 110.051;
+	data.startPosition.x = -2070.24;
+	data.startPosition.y = -1900.76;
+	data.startPosition.z = 111.898;
 	data.isTargetMale = true;
 	data.targetName = "Elsie Green";
 
@@ -115,13 +115,13 @@ TurkishRunnerExecutor* BountyMissionsFactory::turkishRunnerExecutor()
 	data.area = MapAreas::Blackwater;
 	data.missionName = "The Turkish Runner";
 	data.crime = "Horse theft";
-	data.description = "He wanted for stealing a rare horse\nfrom the stables in Blackwater.\nThe suspect is a mexican, middle aged male.\nLast seen near Macfarlande's ranch.\nBe aware, he could be armed.";
-	data.requiredTargetCondition = TargetCondition::Alive;
-	data.reward = 50;
-	data.rewardStr = "$50";
-	data.startPosition = toVector3(-2758.81, -2690.14, 87.4308);
+	data.description = "He wanted for stealing a rare horse\nfrom the stables in Blackwater.\nThe suspect is a member of the skinner brothers, \nmiddle aged male. Last seen near Macfarlande's ranch.\nBe aware, he could be armed.";
+	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
+	data.reward = 70;
+	data.rewardStr = "$70";
+	data.startPosition = toVector3(-2815.95, -2687.39, 86.0734);
 	data.isTargetMale = true;
-	data.targetName = "Alejandro Hernandez";
+	data.targetName = "Red Hinto";
 
 	return new TurkishRunnerExecutor(data, areasMgr);
 }
@@ -134,10 +134,10 @@ GushkalaInataExecutor* BountyMissionsFactory::gushkalaInataExecutor()
 	data.missionName = "GushkalaInata";
 	data.crime = "Robbing";
 	data.description = "Gushkala Inata known as Hidden Snake\npractices a particular skill when it comes to crime.\nHe is known to rob and kill people who cross his\npath and then hides the forest of Tall of Trees.\nSo far not a single lawman has been able\nto find him, hence a bounty has been\nput on his head for capture.";
-	data.requiredTargetCondition = TargetCondition::Alive;
+	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 80;
 	data.rewardStr = "$80";
-	data.startPosition = toVector3(-2324.694, -1440.603, 151.5746);
+	data.startPosition = toVector3(-2369.87, -1597.39, 152.826);
 	data.isTargetMale = true;
 	data.targetName = "Gushkala Inata";
 
@@ -204,12 +204,12 @@ JacobSeedExecutor* BountyMissionsFactory::jacobSeedExecutor()
 	data.id = 7;
 	data.area = MapAreas::Rhodes;
 	data.missionName = "Jacob Seed";
-	data.crime = "Fire Arms Theft";
-	data.description = "Jacob Seed is the leader of a local\nLemoyne Raiders group.\nHe is wanted for robbing a firearms delivery\non its way to Fort Wallace.\nHe and his gang are extremely dangerous.";
-	data.requiredTargetCondition = TargetCondition::Alive;
+	data.crime = "Murder";
+	data.description = "Jacob Seed is a leader of a local\nLemoyne Raiders group.\nHe is wanted for robbing a firearms delivery\non its way to Fort Wallace.\nHe and his gang are extremely dangerous.";
+	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 60;
 	data.rewardStr = "$60";
-	data.startPosition = toVector3(1570.67, -439.573, 65.966);
+	data.startPosition = toVector3(2085.92, -1829.28, 40.7415);
 	data.isTargetMale = true;
 	data.targetName = "Jacob Seed";
 
@@ -222,14 +222,14 @@ JaneBullionExecutor* BountyMissionsFactory::janeBullionExecutor()
 	data.id = 8;
 	data.area = MapAreas::Rhodes;
 	data.missionName = "JaneBullion";
-	data.crime = "Multiple counts of theft";
-	data.description = "Jane Bullion has been charged with multiple counts\nof theft throughout Saint Denis, earning her the name Runaway Jane.\nDue to her violentless way of crime she is wanted alive.\nKeep your eyes sharp however, for her name is not\njust given out of pity. She has been recognized to be near\nrhodes after her bounty was set up";
-	data.requiredTargetCondition = TargetCondition::Alive;
-	data.reward = 30;
-	data.rewardStr = "$30";
-	data.startPosition = toVector3(2114.806, -1277.321, 41.13449);
-	data.isTargetMale = false;
-	data.targetName = "Jane Bullion";
+	data.crime = "Murder and Robbery";
+	data.description = "";
+	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
+	data.reward = 60;
+	data.rewardStr = "$60";
+	data.startPosition = toVector3(1079.53, -704.945, 94.8572);
+	data.isTargetMale = true;
+	data.targetName = "Nathan Jackson";
 
 	return new JaneBullionExecutor(data, areasMgr);
 }
@@ -240,7 +240,7 @@ BufordDukeExecutor* BountyMissionsFactory::bufordDukeExecutor()
 	data.id = 9;
 	data.area = MapAreas::Rhodes;
 	data.missionName = "BufordDuke";
-	data.crime = "Fire Arms Theft";
+	data.crime = "Murder";
 	data.description = "";
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 55;
@@ -258,7 +258,7 @@ HarperConnorExecutor* BountyMissionsFactory::harperConnorExecutor()
 	data.id = 10;
 	data.area = MapAreas::Rhodes;
 	data.missionName = "HarperConnor";
-	data.crime = "Fire Arms Theft";
+	data.crime = "Murder";
 	data.description = "";
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 65;
@@ -276,7 +276,7 @@ WallaceKnoxExecutor* BountyMissionsFactory::wallaceKnoxExecutor()
 	data.id = 11;
 	data.area = MapAreas::Rhodes;
 	data.missionName = "WallaceKnox";
-	data.crime = "Fire Arms Theft";
+	data.crime = "Murder";
 	data.description = "";
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 70;
@@ -294,7 +294,7 @@ EmmettDavisExecutor* BountyMissionsFactory::emmettDavisExecutor()
 	data.id = 12;
 	data.area = MapAreas::Rhodes;
 	data.missionName = "EmmettDavis";
-	data.crime = "Fire Arms Theft";
+	data.crime = "Murder";
 	data.description = "";
 	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
 	data.reward = 55;
@@ -314,10 +314,10 @@ AndrewClarkExecutor* BountyMissionsFactory::andrewClarkExecutor()
 	data.missionName = "Andrew Clark";
 	data.crime = "Fraud and Theft";
 	data.description = "He had been working for the bank of Valentine\nfor years and was found guilty of\nstealing the bank's money.\nLast known whereabouts was north of Valentine.";
-	data.requiredTargetCondition = TargetCondition::Alive;
-	data.reward = 40;
-	data.rewardStr = "$40";
-	data.startPosition = toVector3(-364.596, 1263.53, 141.176);
+	data.requiredTargetCondition = TargetCondition::DeadOrAlive;
+	data.reward = 70;
+	data.rewardStr = "$70";
+	data.startPosition = toVector3(-341.254, -140.198, 48.0633);
 	data.isTargetMale = true;
 	data.targetName = "Andrew Clark";
 

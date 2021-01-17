@@ -6,7 +6,7 @@ MarquisRussellExecutor::MarquisRussellExecutor(BountyMissionData missionData, Ma
 	: BaseMissionExecutor(missionData, areasMgr)
 {
 	setTargetAreaRadius(100);
-	setRequiredDistanceToLocateTarget(75);
+	setRequiredDistanceToLocateTarget(50);
 	setMustBeCloseToLocate(true);
 
 	campfirePos = toVector3(-1963.304, 2158.636, 326.5899);

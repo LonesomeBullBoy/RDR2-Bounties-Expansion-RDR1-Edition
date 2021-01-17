@@ -1,8 +1,166 @@
 #include "Main.h";
 
+using namespace std;
+
+JacobSeedExecutor::JacobSeedExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(80);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(2061.37, -1838.93, 40.7533);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void JacobSeedExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 lastImpactCoords;
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if ((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) || WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) && distanceBetween(ENTITY::GET_ENTITY_COORDS(*pedItr, 1, 0), lastImpactCoords) <= GUARD_SUSPECT_RANGE) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void JacobSeedExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(2075.75, -1817.13, 40.6617));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(2076.22, -1815.83, 40.6673));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello57";
+	routine1.patrolRoute.push_back(toVector3(2065.37, -1842.76, 40.7511));
+	routine1.patrolHeading.push_back(toVector3(2065.27, -1842.41, 40.7488));
+	routine1.patrolRoute.push_back(toVector3(2050.63, -1855.54, 40.7495));
+	routine1.patrolHeading.push_back(toVector3(2049.79, -1855.86, 40.7705));
+	routine1.patrolRoute.push_back(toVector3(2066.75, -1865.27, 40.8109));
+	routine1.patrolHeading.push_back(toVector3(2066.44, -1865.89, 40.8223));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello58";
+	routine2.patrolRoute.push_back(toVector3(2089.45, -1836.11, 40.8435));
+	routine2.patrolHeading.push_back(toVector3(2089.43, -1836.87, 40.8254));
+	routine2.patrolRoute.push_back(toVector3(2072.09, -1834.86, 40.546));
+	routine2.patrolHeading.push_back(toVector3(2071.75, -1834.9, 40.5498));
+	routine2.patrolRoute.push_back(toVector3(2080.32, -1820.5, 40.6918));
+	routine2.patrolHeading.push_back(toVector3(2079.95, -1819.81, 40.6836));
+
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(2087.34, -1817.95, 41.9341), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(2089.93, -1818.91, 41.9271), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(2091.45, -1815.44, 41.9287), (rand() % 361)), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(2089.45, -1836.11, 40.8435), 178), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(2064.44, -1833.69, 40.7375), 150), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(2085.92, -1829.28, 40.7415), 112), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("G_M_Y_UniExConfeds_01", toVector3(2065.37, -1842.76, 40.7511), 17), IdlingModifier::Patrol, routine1);
+	enemiesGroup->start();
+}
+
+Ped JacobSeedExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(2076.97, -1813.81, 40.6774));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(2093.4, -1819.38, 41.82);
+	Ped target = createPed("G_M_O_UniExConfeds_01", targetPos, 230);
+	enemiesGroup->add(target, IdlingModifier::Scout, routine3);
+	return target;
+}
+
+void JacobSeedExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void JacobSeedExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void JacobSeedExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void JacobSeedExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void JacobSeedExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+
+/*#include "Main.h";
+
 const float COMBAT_RANGE = 18.0f;
 const int LEMOYNE_RAIDERS_MODELS_COUNT = 2;
-char* const LEMOYNE_RAIDERS_MODELS[LEMOYNE_RAIDERS_MODELS_COUNT] = {"g_m_o_uniexconfeds_01", "g_m_y_uniexconfeds_01"/*, "g_m_y_uniexconfeds_02"*/};
+char* const LEMOYNE_RAIDERS_MODELS[LEMOYNE_RAIDERS_MODELS_COUNT] = {"g_m_o_uniexconfeds_01", "g_m_y_uniexconfeds_01"/*, "g_m_y_uniexconfeds_02"*//*};
 const Hash GATLING_POLICE_WAGON_VEHICLE = 0xB31F8075;
 const float FAIL_DISTANCE = 110.0f;
 
@@ -205,4 +363,4 @@ void JacobSeedExecutor::enemyDriveGatling(Ped enemy)
 	AI::CLOSE_SEQUENCE_TASK(seq);
 	AI::TASK_PERFORM_SEQUENCE(enemy, seq);
 	AI::CLEAR_SEQUENCE_TASK(&seq);
-}
+}*/

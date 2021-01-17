@@ -127,6 +127,7 @@ void GuardsGroup::clearDeadGuards()
 		if (ENTITY::IS_ENTITY_DEAD((*itr)->ped()) || distanceBetweenEntities((*itr)->ped(), PLAYER::PLAYER_PED_ID()) > 250)
 		{
 			(*itr)->stop();
+			(*itr)->stop();
 			itr = guards.erase(itr);
 			ped->releaseEntitySafe(&pedItr);
 		}

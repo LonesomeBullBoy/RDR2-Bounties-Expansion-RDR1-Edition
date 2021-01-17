@@ -2,24 +2,12 @@
 
 class JaneBullionExecutor : public BaseMissionExecutor
 {
-
-enum EnemiesMode
-{
-	IDLE,
-	ALERTED,
-	WARNING,
-	COMBAT
-};
-
 private:
 	Vector3 campfirePos;
 	Object campfire;
 	Ped horse;
-	vector<Ped> enemies;
+	GuardsGroup* enemiesGroup;
 	vector<Ped> horses;
-	EnemiesMode enemiesStatus;
-	GameStopwatch stopwatch;
-	bool toleratePlayer;
 
 public:
 	JaneBullionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
@@ -33,12 +21,6 @@ protected:
 
 private:
 	void releaseUnnecessaryEntities();
-	void addEnemy(Ped ped);
-	void addHorse(const char* model, Vector3 pos);
 	void addHorse(Ped horse);
-	void enterIdleMode();
-	void enterAlertMode();
-	void enterWarningMode();
-	void enterCombatMode();
-	void createEnemyBlips();
+	void addHorse(const char* model, Vector3 pos);
 };

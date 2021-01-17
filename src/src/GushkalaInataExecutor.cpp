@@ -2,6 +2,165 @@
 
 using namespace std;
 
+GushkalaInataExecutor::GushkalaInataExecutor(BountyMissionData missionData, MapAreasManager* areasMgr)
+	: BaseMissionExecutor(missionData, areasMgr)
+{
+	setTargetAreaRadius(100);
+	setRequiredDistanceToLocateTarget(60);
+	setMustBeCloseToLocate(true);
+
+	campfirePos = toVector3(-2369.87, -1597.39, 152.826);
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+
+	campfire = NULL;
+	horse = NULL;
+}
+
+void GushkalaInataExecutor::update()
+{
+	BaseMissionExecutor::update();
+	releaseUnnecessaryEntities();
+	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 lastImpactCoords;
+	vector<Ped>::iterator pedItr;
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		if (!ENTITY::IS_ENTITY_DEAD(target) && !isPedHogtied(target))
+		{
+			if (!PED::IS_PED_ON_MOUNT(target) && !PED::_0xAAB0FE202E9FC9F0(horse, -1) && !PED::IS_PED_IN_COMBAT(target, player))
+			{
+				PED::_0x5337B721C51883A9(*pedItr, true, true);
+			}
+		}
+		if ((ENTITY::HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY(*pedItr, player, true, true) || WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords) && distanceBetween(ENTITY::GET_ENTITY_COORDS(*pedItr, 1, 0), lastImpactCoords) <= GUARD_SUSPECT_RANGE) && getMissionStage() == BountyMissionStage::LocateTarget)
+		{
+			nextStage();
+		}
+	}
+
+	enemiesGroup->update(); // Update the group to keep it working
+
+	if (getMissionStage() == BountyMissionStage::CaptureTarget && !ENTITY::IS_ENTITY_DEAD(target))
+	{
+		if (distanceBetweenEntities(target, player) > 80)
+		{
+			showSubtitle("The target is getting too far!");
+		}
+		if (distanceBetweenEntities(target, player) > 120)
+		{
+			PED::DELETE_PED(&target);
+			PED::DELETE_PED(&horse);
+			fail("Bounty failed, target lost");
+		}
+	}
+}
+
+void GushkalaInataExecutor::prepareSet()
+{
+	campfire = createProp("P_CAMPFIRE02X", campfirePos);
+	addHorse(horse);
+	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-2388.5, -1595.79, 153.245));
+	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-2388.79, -1594.31, 153.25));
+
+	// Now just add the enemies to the group to make them be controlled by it
+	RoutineParams routine1;
+	routine1.patrolName = "miss_hello52";
+	routine1.patrolRoute.push_back(toVector3(-2376.88, -1582.15, 153.182));
+	routine1.patrolHeading.push_back(toVector3(-2377.47, -1581.64, 153.186));
+	routine1.patrolRoute.push_back(toVector3(-2385.41, -1590.58, 153.181));
+	routine1.patrolHeading.push_back(toVector3(-2385.84, -1591.27, 153.183));
+	routine1.patrolRoute.push_back(toVector3(-2376.21, -1599.85, 153.273));
+	routine1.patrolHeading.push_back(toVector3(-2375.7, -1600.16, 153.271));
+	routine1.patrolRoute.push_back(toVector3(-2367.12, -1590.19, 152.656));
+	routine1.patrolHeading.push_back(toVector3(-2366.61, -1589.77, 152.61));
+
+	RoutineParams routine2;
+	routine2.patrolName = "miss_hello59";
+	routine2.patrolRoute.push_back(toVector3(-2386.16, -1604.21, 153.68));
+	routine2.patrolHeading.push_back(toVector3(-2386.8, -1604.84, 153.637));
+	routine2.patrolRoute.push_back(toVector3(-2374.48, -1613.81, 150.837));
+	routine2.patrolHeading.push_back(toVector3(-2373.85, -1614.25, 150.735));
+	routine2.patrolRoute.push_back(toVector3(-2369.76, -1601.2, 152.73));
+	routine2.patrolHeading.push_back(toVector3(-2369.78, -1600.77, 152.75));
+
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2373.24, -1595.4, 153.004), 256), IdlingModifier::Rest);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2372.19, -1591.21, 152.99), rand() % 306 + 165), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2375.83, -1572.4, 153.468), rand() % 361), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2386.16, -1604.21, 153.68), 134), IdlingModifier::Patrol, routine2);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2376.88, -1582.15, 153.182), rand() % 361), IdlingModifier::Patrol, routine1);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2373.92, -1587.23, 153.122), 329), IdlingModifier::Scout);
+	enemiesGroup->add(createPed("g_m_m_unimountainmen_01", toVector3(-2392.55, -1590.97, 153.303), 90), IdlingModifier::Rest);
+	enemiesGroup->start();
+}
+
+Ped GushkalaInataExecutor::spawnTarget()
+{
+	RoutineParams routine3;
+	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-2389.18, -1592.39, 153.229));
+	routine3.Horse = horse;
+	routine3.isTarget = true;
+	Vector3 targetPos = toVector3(-2379.75, -1591.5, 153.157);
+	Ped target = createPed(SKINNER_BROTHER_MODEL, targetPos, 146);
+	enemiesGroup->add(target, IdlingModifier::Rest, routine3);
+	return target;
+}
+
+void GushkalaInataExecutor::onTargetLocated()
+{
+	BaseMissionExecutor::onTargetLocated();
+	enemiesGroup->addBlips();
+}
+
+void GushkalaInataExecutor::addHorse(Ped horse)
+{
+	PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(horse, true);
+	PED::_0xD3A7B003ED343FD9(horse, 0x8FFCF06B, true, false, false);
+	horses.push_back(horse);
+}
+
+void GushkalaInataExecutor::addHorse(const char* model, Vector3 pos)
+{
+	Ped horse = createPed((char*)model, pos);
+	addHorse(horse);
+}
+
+void GushkalaInataExecutor::releaseUnnecessaryEntities()
+{
+	Ped player = PLAYER::PLAYER_PED_ID();
+	std::vector<Ped>::iterator it;
+
+	if (getMissionStage() >= BountyMissionStage::ArriveToPoliceStation)
+	{
+		for (it = horses.begin(); it != horses.end(); it++)
+		{
+			releaseEntitySafe(&(*it));
+		}
+	}
+}
+
+void GushkalaInataExecutor::cleanup()
+{
+	BaseMissionExecutor::cleanup();
+
+	enemiesGroup->stop();
+	releaseEntitySafe(&campfire);
+
+	vector<Ped>::iterator pedItr;
+	for (pedItr = horses.begin(); pedItr != horses.end(); pedItr++)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+	vector<Ped>* enemyPeds = enemiesGroup->peds();
+	for (pedItr = enemyPeds->begin(); pedItr != enemyPeds->end(); ++pedItr)
+	{
+		releaseEntitySafe(&(*pedItr));
+	}
+}
+/*#include "Main.h";
+
+using namespace std;
+
 const int IDLE_DIST = 3;
 const int ALERT_DIST = 3;
 const int WARN_DIST = 3;
@@ -298,4 +457,4 @@ void GushkalaInataExecutor::cleanup()
 	{
 		releaseEntitySafe(&(*pedItr));
 	}
-}
+}*/

@@ -65,7 +65,7 @@ void giveSaddleToHorse(Ped horse, HorseSaddleHashes saddleHash)
 	PED::_0xD3A7B003ED343FD9(horse, (Hash)saddleHash, true, false, false); 
 }
 
-vector<Ped>* getPedGroupMembers(Group group)
+vector<Ped>* getPedGroupMembers(int group)
 {
 	if (!PED::DOES_GROUP_EXIST(group))
 	{
