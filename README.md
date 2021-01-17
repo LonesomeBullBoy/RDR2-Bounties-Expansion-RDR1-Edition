@@ -1,6 +1,6 @@
-# Red Dead Redemption 2: Bounties Expansion
-This mod adds some new bounty missions to Red Dead Redemption 2 single player.  
-Up to version 1.0.0 there are 4 new bounties.   
+# Red Dead Redemption 2: Bounties Expansion - RDR1 Edition
+The RDR1 Version is basically the same as the Main Version. Only a couple of bounties have been changed.
+The Main Version holds 7 unique bounties. These have their own little story and objective to them apart from the bounties with bodyguards and such.﻿The RDR1 Edition changes the unique bounties to be like the other bounties. With bodyguards, detection and all. These bounties are made to look like the ﻿ones present in RDR1. That's why it is called the RDR1 Edition.
 
 ### Installation:
 - Download and install AB's ScripthookRDR2: http://www.dev-c.com/rdr2/scripthookrdr2/ (make sure you install the asi loader).
@@ -16,4 +16,4 @@ Up to version 1.0.0 there are 4 new bounties.
 - Drop the target by the cell and get your reward.
 
 ### Known Issues:
-- Sometimes some of the blips are not removed.
+- Occasional memory exception error.
