@@ -204,6 +204,13 @@ void BaseMissionExecutor::update()
 			{
 				nextStage();
 			}
+			else if (distanceBetween(targetPos, *getArea()->policeDeptCoords) >= 20)
+			{
+				OBJECT::DELETE_OBJECT(&dummyProp);
+				deleteBlipSafe(&cellBlip);
+				onTargetCaptured();
+				stage = BountyMissionStage::ArriveToPoliceStation;
+			}
 			break;
 
 		case BountyMissionStage::CollectReward:
@@ -216,108 +223,6 @@ void BaseMissionExecutor::update()
 			deleteBlipSafe(&targetBlip);
 			targetBlip = createBlip(target, BLIP_TYPE_BOUNTY_TARGET, BLIP_SPRITE_BOUNTY_TARGET);
 		}
-		/*if (stage == BountyMissionStage::MissionInitialization)
-		{
-			initialize();
-			nextStage();
-		}
-		else if (stage == BountyMissionStage::CollectPoster)
-		{
-			if (distanceBetween(playerPos, *getArea()->bountyPostersCoords) <= 3.0f &&
-				PED::IS_PED_ON_FOOT(player))
-			{
-				inspectPosterPrompt->show();
-
-				if (inspectPosterPrompt->isActivatedByPlayer())
-				{
-					nextStage();
-				}
-			}
-			else
-			{
-				inspectPosterPrompt->hide();
-			}
-		}
-		else if (stage == BountyMissionStage::GoToArea)
-		{
-			if (distanceBetween(playerPos, missionData->startPosition) <= targetAreaRadius)
-			{
-				nextStage();
-			}
-		}
-		else if (stage == BountyMissionStage::LocateTarget)
-		{
-			if (mustBeCloseToLocate)
-			{
-				if (distanceBetweenEntities(player, target) <= requiredDistanceToLocate)
-				{
-					nextStage();
-				}
-			}
-			else if	(ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT(player, target, 0))
-			{
-				nextStage();
-			}
-			if (distanceBetweenEntities(player, target) <= requiredDistanceToLocate + 30 && !yellow)
-			{
-				RADAR::REMOVE_BLIP(&targetAreaBlip);
-				targetAreaBlip = createBlip(ENTITY::GET_ENTITY_COORDS(target, true, false), targetAreaRadius - 40, 0xC19DA63, 0);
-				yellow = true;
-			}
-			if (distanceBetween(playerPos, missionData->startPosition) > targetAreaRadius)
-			{
-				cleanup();
-				releaseEntitySafe(&target);
-				stage = BountyMissionStage::GoToArea;
-				if (yellow == true)
-				{
-					fail("Bounty failed, target lost");
-				}
-			}
-			if (yellow == true)
-			{
-				if (distanceBetweenEntities(target, player) > 100)
-				{
-					PED::DELETE_PED(&target);
-					fail("Bounty failed, target lost");
-				}
-			}
-		}
-		else if (stage == BountyMissionStage::CaptureTarget)
-		{
-			if (isPedHogtied(target) ||
-				(missionData->requiredTargetCondition == TargetCondition::DeadOrAlive && ENTITY::IS_ENTITY_DEAD(target)))
-			{
-				nextStage();
-			}
-		}
-		else if (stage == BountyMissionStage::ArriveToPoliceStation)
-		{
-			float distanceToPolice = distanceBetween(ENTITY::GET_ENTITY_COORDS(player, 1, 1), *(getArea()->policeDeptCoords));
-			if (distanceToPolice < 500 && !spawnedBountyHunters)
-			{
-				spawnBountyHunters();
-			}
-			Vector3 targetPos = ENTITY::GET_ENTITY_COORDS(target, true, false);
-			if (distanceBetween(targetPos, *getArea()->policeDeptCoords) < 20)
-			{
-				nextStage();
-			}
-		}
-		else if (stage == BountyMissionStage::HandOverTarget)
-		{
-			Vector3 targetPos = ENTITY::GET_ENTITY_COORDS(target, true, false);
-			if (distanceBetween(targetPos, *getArea()->cellCoords) < 3 &&
-				ENTITY::GET_ENTITY_HEIGHT_ABOVE_GROUND(target) <= 1.1)
-			{
-				nextStage();
-			}
-		}
-		else if (stage == BountyMissionStage::CollectReward)
-		{
-			nextStage();
-		}*/
-
 		if (stage >= BountyMissionStage::LocateTarget && stage <= BountyMissionStage::CollectReward)
 		{
 			if (missionData->requiredTargetCondition == TargetCondition::Alive && ENTITY::IS_ENTITY_DEAD(target))
@@ -522,6 +427,7 @@ void BaseMissionExecutor::onTargetCaptured()
 	Vector3* posterPos = getArea()->policeDeptCoords;
 	dummyProp = createProp("p_shotGlass01x", *posterPos, true, false, false);
 	policeLocBlip = createBlip(dummyProp, 0x1857A152);
+	RADAR::_0x662D364ABF16DE2F(policeLocBlip, 0x900A4D0A);
 	std::stringstream text;
 	text << "Take ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~ to the ~COLOR_YELLOW~Police Department";
 	showSubtitle(text.str().c_str());
@@ -545,7 +451,7 @@ void BaseMissionExecutor::onArrivalToPoliceStation()
 	}
 	
 	std::stringstream text;
-	text << "Drop ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~ in the ~COLOR_YELLOW~Cell";
+	text << "Drop ~COLOR_RED~" << missionData->targetName << "~COLOR_WHITE~ in front of the ~COLOR_YELLOW~Cell";
 	showSubtitle(text.str().c_str());
 }
 
@@ -577,8 +483,6 @@ void BaseMissionExecutor::spawnBountyHunters()
 	Ped player = PLAYER::PLAYER_PED_ID();
 	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
 	Vector3 enemiesSourcePos = getRandomPedPositionInRange(playerPos, 60);
-	log(playerPos);
-	log(enemiesSourcePos);
 
 	Ped horse1 = createPed("A_C_Horse_TennesseeWalker_DappleBay", getRandomPedPositionInRange(playerPos, 60));
 	Ped horse2 = createPed("A_C_Horse_TennesseeWalker_DappleBay", getRandomPedPositionInRange(playerPos, 60));
