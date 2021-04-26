@@ -10,7 +10,7 @@ AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreas
 	setMustBeCloseToLocate(true);
 
 	campfirePos = toVector3(-333.478, -144.551, 49.0278);
-	enemiesGroup = new GuardsGroup(campfirePos, 25, true); // Create a new Guards Group. First parameter is the center of the defense area. The second one is the radius. The third is whether to tolerate the player when he gets close or not.
+	enemiesGroup = new GuardsGroup(campfirePos, 25, true);
 
 	campfire = NULL;
 	horse = NULL;
@@ -18,9 +18,26 @@ AndrewClarkExecutor::AndrewClarkExecutor(BountyMissionData missionData, MapAreas
 
 void AndrewClarkExecutor::update()
 {
+	Ped player = PLAYER::PLAYER_PED_ID();
+	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, false);
+	if (getMissionStage() == BountyMissionStage::ArriveToPoliceStation)
+	{
+		if (ENTITY::IS_ENTITY_AT_COORD(player, -138.804, -43.0286, 95.5071, 1, 1, 1, true, true, 1) && !ENTITY::DOES_ENTITY_EXIST(target))//If enemies were led to camp
+		{
+			target = spawnTarget();
+			decorateTarget();
+			deleteBlipSafe(&targetBlip);
+			ENTITY::SET_ENTITY_HEALTH(target, 0, true);
+			targetBlip = createBlip(target, BLIP_TYPE_BOUNTY_TARGET, BLIP_SPRITE_BOUNTY_TARGET);
+			ENTITY::SET_ENTITY_COORDS(target, -122.451, -98.7421, 75.8352, true, true, true, false);
+		}
+		if (distanceBetween(playerPos, campfirePos) > 500 && spawnchance == 1 && !spawnedBountyHunters)
+		{
+			spawnBountyHunters();
+		}
+	}
 	BaseMissionExecutor::update();
 	releaseUnnecessaryEntities();
-	Ped player = PLAYER::PLAYER_PED_ID();
 	Vector3 lastImpactCoords;
 	vector<Ped>::iterator pedItr;
 	vector<Ped>* enemyPeds = enemiesGroup->peds();
@@ -59,7 +76,6 @@ void AndrewClarkExecutor::update()
 void AndrewClarkExecutor::prepareSet()
 {
 	campfire = createProp("P_CAMPFIRE02X", campfirePos);
-	addHorse(horse);
 	addHorse("A_C_Horse_KentuckySaddle_Black", toVector3(-332.809, -157.876, 50.4296));
 	addHorse("A_C_Horse_KentuckySaddle_SilverBay", toVector3(-336.251, -155.543, 49.7358));
 
@@ -98,6 +114,7 @@ Ped AndrewClarkExecutor::spawnTarget()
 {
 	RoutineParams routine3;
 	this->horse = createPed("A_C_Horse_KentuckySaddle_Grey", toVector3(-334.379, -156.812, 50.0511));
+	addHorse(horse);
 	routine3.Horse = horse;
 	routine3.isTarget = true;
 	Vector3 targetPos = toVector3(-329.429, -151.443, 50.0784);

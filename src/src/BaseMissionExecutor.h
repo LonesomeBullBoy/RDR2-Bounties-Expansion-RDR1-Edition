@@ -16,22 +16,28 @@ private:
 	bool mustBeCloseToLocate;
 	bool seen;
 	bool stopped;
+	bool test;
 	int targetAreaRadius;
-	bool spawnedBountyHunters;
-	int spawnchance;
+	//bool spawnedBountyHunters;
+	//int spawnchance;
 
 	Object poster;
 	Object dummyProp;
+	Pickup money;
 	Blip posterBlip;
 	Blip targetAreaBlip;
 	Blip policeLocBlip;
 	Blip cellBlip;
-	Blip targetBlip;
+	Blip moneyBlip;
+	//Blip targetBlip;
 	vector<Ped> bountyHunters;
 	vector<Ped> bountyhorses;
 
 protected:
 	Ped target;
+	Blip targetBlip;
+	bool spawnedBountyHunters;
+	int spawnchance;
 
 public:
 	BaseMissionExecutor(BountyMissionData missionData, MapAreasManager* areasMgr);
@@ -51,6 +57,8 @@ protected:
 	virtual void prepareSet() = 0;
 	virtual Ped spawnTarget() = 0;
 	void nextStage();
+	void decorateTarget();
+	void spawnBountyHunters();
 
 	void fail(const char* reason = NULL);
 	virtual void initialize();
@@ -65,8 +73,8 @@ protected:
 	virtual void cleanup();
 
 private:
-	void decorateTarget();
-	void spawnBountyHunters();
+	//void decorateTarget();
+	//void spawnBountyHunters();
 	void addBountyHunter(Ped horse, bool isDriver);
 	void releaseUnnecessaryEntities();
 };

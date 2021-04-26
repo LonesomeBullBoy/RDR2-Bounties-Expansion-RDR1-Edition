@@ -85,21 +85,37 @@ void main()
 			{
 				log("didnt hit");
 			}*/
+		//Vector3 lastImpactCoords;
+		//if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(player, &lastImpactCoords))
+		//{
+		//	std::stringstream output;
+		//	output << "\n"
+		//		<< lastImpactCoords.x << ", " << lastImpactCoords.y << ", " << lastImpactCoords.z << "\n"
+		//		<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
+		//	log(output.str().c_str());
+		//}
 
 		//if (IsKeyJustUp(VK_KEY_X))
 		//{
-		//	Ped player = PLAYER::PLAYER_PED_ID();
-		//	Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
-		//	float ground;
-		//	GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
-		//	std::stringstream output;
-		//	output << "\n"
-		//		<< playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"
-		//		<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
-		//		<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
-
-		//	log(output.str().c_str());
-
+			//OBJECT::_SET_DOOR_ACCELERATION_LIMIT(535323366, 0);//valentine
+			//OBJECT::_SET_DOOR_ACCELERATION_LIMIT(902070893, 0);//strawberry
+			//OBJECT::_SET_DOOR_ACCELERATION_LIMIT(1711767580, 0);//saintdenis
+			//OBJECT::_SET_DOOR_ACCELERATION_LIMIT(1878514758, 0);//rhodes
+			//OBJECT::_SET_DOOR_ACCELERATION_LIMIT(2167775834, 0);//blackwater
+			//OBJECT::_SET_DOOR_ACCELERATION_LIMIT(4235597664, 0);//armadillo
+			//OBJECT::_SET_DOOR_ACCELERATION_LIMIT(831345624, 0);//tumbleweed
+			//OBJECT::_SET_DOOR_ACCELERATION_LIMIT(2984805596, 0);//tumbleweed
+			//Ped player = PLAYER::PLAYER_PED_ID();
+			//Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
+			//float ground;
+			//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);
+			//std::stringstream output;
+			//output << "\n"
+			//	<< playerPos.x << ", " << playerPos.y << ", " << playerPos.z << "\n"
+			//	<< playerPos.x << ", " << playerPos.y << ", " << ground << "\n"
+			//	<< "heading: " << ENTITY::GET_ENTITY_HEADING(player);
+			//log(output.str().c_str());
+			//Pickup money1 = OBJECT::CREATE_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_VARIABLE"), -277.1, 805.486, 119.17, 0, 200, true, GAMEPLAY::GET_HASH_KEY("s_inv_moneyclip01x"), 1, 1);
 			//Vector3 playerPos = ENTITY::GET_ENTITY_COORDS(player, true, 0);
 			//float ground;
 			//GAMEPLAY::GET_GROUND_Z_FOR_3D_COORD(playerPos.x, playerPos.y, playerPos.z, &ground, false);

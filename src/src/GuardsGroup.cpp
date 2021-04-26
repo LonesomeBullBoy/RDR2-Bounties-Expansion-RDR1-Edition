@@ -59,11 +59,11 @@ void GuardsGroup::stop()
 void GuardsGroup::update()
 {
 	clearDeadGuards();
-	if (guards.size() == 0)
-	{
-		stop();
-		return;
-	}
+	//if (guards.size() == 0)
+	//{
+	//	stop();
+	//	return;
+	//}
 
 	TensionMode sharedTensionMode = detectSharedTensionMode();
 	for (vector<GenericGuardingBehavior*>::iterator itr = guards.begin(); itr != guards.end(); itr++)
@@ -126,7 +126,6 @@ void GuardsGroup::clearDeadGuards()
 
 		if (ENTITY::IS_ENTITY_DEAD((*itr)->ped()) || distanceBetweenEntities((*itr)->ped(), PLAYER::PLAYER_PED_ID()) > 250)
 		{
-			(*itr)->stop();
 			(*itr)->stop();
 			itr = guards.erase(itr);
 			ped->releaseEntitySafe(&pedItr);
